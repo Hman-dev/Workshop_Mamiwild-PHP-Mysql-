@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-
+require __DIR__.'/src/models/recipe-model.php';
 // Input GET parameter validation (integer >0)
 $id = filter_var($_GET['id'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
 if (false === $id || null === $id) {
@@ -8,13 +8,17 @@ if (false === $id || null === $id) {
     exit("Wrong input parameter");
 }
 
+
+// Fetching a recipe
+$recipe = getRecipeById($id);
+
 // Fetching a recipe from database -  assuming the database is okay
-$connection = new PDO("mysql:host=" . SERVER . ";dbname=" . DATABASE . ";charset=utf8", USER, PASSWORD);
-$query = 'SELECT title, description FROM recipe WHERE id=:id';
-$statement = $connection->prepare($query);
-$statement->bindValue(':id', $id, PDO::PARAM_INT);
-$statement->execute();
-$recipe = $statement->fetch(PDO::FETCH_ASSOC);
+// $connection = new PDO("mysql:host=" . SERVER . ";dbname=" . DATABASE . ";charset=utf8", USER, PASSWORD);
+// $query = 'SELECT title, description FROM recipe WHERE id=:id';
+// $statement = $connection->prepare($query);
+// $statement->bindValue(':id', $id, PDO::PARAM_INT);
+// $statement->execute();
+// $recipe = $statement->fetch(PDO::FETCH_ASSOC);
 
 // Database result check
 if (!isset($recipe['title']) || !isset($recipe['description'])) {
@@ -23,8 +27,10 @@ if (!isset($recipe['title']) || !isset($recipe['description'])) {
 }
 
 // Generate the web page
+require __DIR__.'/src/views/show.php';
+
 ?>
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -39,4 +45,4 @@ if (!isset($recipe['title']) || !isset($recipe['description'])) {
             <?= $recipe['description'] ?>
         </div>
     </body>
-</html>
+</html> -->
